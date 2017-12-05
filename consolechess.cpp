@@ -6,6 +6,8 @@
 
 using namespace std;
 
+array<char*, 8> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "OOOOOOOO","OOOOOOOO","OOOOOOOO","OOOOOOOO","PPPPPPPP","RNBQKBNR"};
+
 void DisplayBoard(array<char*, 8> temp)
 {
     cout <<"    1  2  3  4  5  6  7  8 "<<endl;
@@ -22,9 +24,23 @@ void DisplayBoard(array<char*, 8> temp)
     cout <<"  -------------------------"<<endl;
 }
 
-int main()
+array<char*, 8> movePiece(array<char*, 8> temp, char sourceRow,int sourceCol,char destRow,int destCol)
 {
-    cout<<"Initializing Console Chess..."<<endl;
+    /*int Row = (sourceRow-'a');
+    int destiRow = (destRow-'a');
+    char temp2 = temp[Row][sourceCol];
+    char temp3 = temp[destiRow][destCol];
+    temp[Row][sourceCol] = temp3;
+    temp[destiRow][destCol] = temp2;*/
+    return temp;
+}
+
+void consolechess(array<char*, 8> tempBoard)
+{
+    array<char*, 8> currentBoard = tempBoard;
+
+    DisplayBoard(currentBoard);
+
     string BLACK = "black";
     string WHITE = "white";
     string EMPTY = "[]";
@@ -44,10 +60,6 @@ int main()
 
     int whiteScore = 0;
     int blackScore = 0;
-
-    array<char*, 8> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "OOOOOOOO","OOOOOOOO","OOOOOOOO","OOOOOOOO","PPPPPPPP","RNBQKBNR"};
-
-    DisplayBoard(DEFAULT_POSITION);
 
     while(!bExit)
     {
@@ -91,9 +103,16 @@ int main()
                     cout<<"You entered an invalid destination!"<<endl;
                     bValid = false;
                 }
-                else cout<<endl<<"Attempting to move "<<turn<<" "<<toMove<<" to "<< unitTemp<<endl;
-                if(turn == WHITE) whiteScore+=10;
-                else blackScore+=10;
+                else {
+                    cout<<endl<<"Attempting to move "<<turn<<" "<<toMove<<" to "<< unitTemp<<endl;
+
+                    currentBoard = movePiece(currentBoard, 'g',4,'e',4);
+
+                    DisplayBoard(currentBoard);
+
+                    if(turn == WHITE) whiteScore+=10;
+                    else blackScore+=10;
+                }
             }
 
             //switch the turn
@@ -112,7 +131,12 @@ int main()
             {
                 bValid = true;
                 if(unitTemp.compare("yes") == 0) {
-                    cout<<endl<<"Starting a new game, not yet implemented..."<<endl;
+                    cout<<endl<<"Starting a new game..."<<endl;
+                    currentBoard = DEFAULT_POSITION;
+                    whiteScore = blackScore = 0;
+                    turn = WHITE;
+                    toMove="";
+                    consolechess(DEFAULT_POSITION);
                     bExit = true;
                 }
                 else if (unitTemp.compare("no") == 0) bExit = true;
@@ -127,6 +151,13 @@ int main()
             cout<<endl<<"Invalid action entered!"<<endl;
         }
     }
+}
+
+int main()
+{
+    cout<<"Initializing Console Chess..."<<endl;
+
+    consolechess(DEFAULT_POSITION);
 
     return 1;
 }
