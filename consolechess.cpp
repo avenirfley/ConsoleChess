@@ -50,7 +50,7 @@ int main()
 
     bool bExit = false;
 
-    enum Actions {Exit, Move};
+    enum Actions {Exit, Move, EndGame};
     string temp;
     Actions action;
 
