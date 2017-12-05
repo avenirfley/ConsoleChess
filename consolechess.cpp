@@ -2,27 +2,32 @@
 #include <string>
 #include <fstream>
 #include <array>
+#include <algorithm>
 
 using namespace std;
 
 int main()
 {
     cout<<"Initializing Console Chess..."<<endl;
-    char BLACK = 'b';
-    char WHITE = 'w';
+    string BLACK = "black";
+    string WHITE = "white";
+    string EMPTY = "[]";
+    string PAWN = "pawn";
+    string KNIGHT = "knight";
+    string BISHOP = "bishop";
+    string ROOK = "rook";
+    string QUEEN = "queen";
+    string KING = "king";
+    string toMove = "";
+    string turn = WHITE;
+    string temp;
+    string unitTemp;
 
-    char EMPTY = -1;
+    bool bExit = false;
+    bool bValid = false;
 
-    char PAWN = 'p';
-    char KNIGHT = 'n';
-    char BISHOP = 'b';
-    char ROOK = 'r';
-    char QUEEN = 'q';
-    char KING = 'k';
-
-    char * board = new char[64];
-
-    char turn = WHITE;
+    int whiteScore = 0;
+    int blackScore = 0;
 
     array<char*, 4> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "PPPPPPPP","RNBQKBNR"};
 
@@ -41,34 +46,84 @@ int main()
                 cout<<"| ";
                 for(int l=0;l<8;l++)
                 {
-                    cout<<"-1"<<" ";
+                    cout<<"[]"<<" ";
                 }
                 cout<<"|"<<endl;
             }
         }
     }
 
-    bool bExit = false;
-
-    enum Actions {Exit, Move, EndGame, SwitchTurns};
-    string temp;
-    Actions action;
-
     while(!bExit)
     {
-        cout<<"What would you like to do? ('exit', 'move')"<<endl;
+        cout<<"Turn: "<<((turn==WHITE)?"WHITE":"BLACK")<<endl;
+        cout<<"What would you like to do? ('exit', 'move', 'endgame')"<<endl;
         cin>>temp;
-        if(temp.compare("exit") == 0)action = Exit;
-        else if(temp.compare("move") == 0)action = Move;
-        switch(action)
-        {
-        case Exit:
-            bExit = true;
-            break;
-        case Move:
-            cout<<"What piece do you want to move?"<<endl;
-            break;
+        transform(temp.begin(), temp.end(), temp.begin(), ::tolower);
+        if(temp.compare("exit") == 0){
+            bExit=true;
         }
+        else if(temp.compare("move") == 0){
+            bValid = false;
+            while(!bValid)
+            {
+                bValid = true;
+                cout<<"What unit would you like to move?";
+                cin>>unitTemp;
+                transform(unitTemp.begin(), unitTemp.end(), unitTemp.begin(), ::tolower);
+                if(unitTemp.compare("pawn") == 0) toMove = PAWN;
+                else if(unitTemp.compare("bishop") == 0) toMove = BISHOP;
+                else if(unitTemp.compare("knight") == 0) toMove = KNIGHT;
+                else if(unitTemp.compare("rook") == 0 | unitTemp.compare("tower") == 0) toMove = ROOK;
+                else if(unitTemp.compare("king") == 0) toMove = KING;
+                else if(unitTemp.compare("queen") == 0) toMove = QUEEN;
+                else {
+                    bValid = false;
+                    cout << "Please enter a valid piece name!"<<endl;
+                    cout<<"(pawn,bishop,knight,rook,king,queen): ";
+                }
+            }
+            bValid = false;
+            while(!bValid)
+            {
+                bValid = true;
+                cout<<"Where do you want to move? 'letternumber' (e4): ";
+                cin>>unitTemp;
+                transform(unitTemp.begin(), unitTemp.end(), unitTemp.begin(), ::tolower);
+                // Parse letter and number to process here...
+
+                if(unitTemp.length() > 2) {
+                    cout<<"You entered an invalid destination!"<<endl;
+                    bValid = false;
+                }
+                else cout<<endl<<"Attempting to move "<<turn<<" "<<toMove<<" to "<< unitTemp<<endl;
+            }
+        }
+        else if(temp.compare("endgame")==0) {
+            cout<<endl<<"------ GAME OVER ------"<<endl;
+            cout<<"White Score: "<< whiteScore<<endl;
+            cout<<"Black Score: "<< blackScore<<endl;
+            cout<<endl<<"Would you like to start a new game? (yes/no): ";
+            cin>>unitTemp;
+            transform(unitTemp.begin(), unitTemp.end(), unitTemp.begin(), ::tolower);
+            bValid = false;
+            while(!bValid)
+            {
+                bValid = true;
+                if(unitTemp.compare("yes") == 0) {
+                    cout<<endl<<"Starting a new game, not yet implemented..."<<endl;
+                    bExit = true;
+                }
+                else if (unitTemp.compare("no") == 0) bExit = true;
+                else {
+                    cout<<endl<<"Please Enter yes/no: ";
+                    bValid = false;
+                }
+            }
+        }
+
+        //switch the turn
+        if(turn == WHITE) turn = BLACK;
+        else turn = WHITE;
     }
 
     return 1;
