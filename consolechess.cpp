@@ -6,6 +6,22 @@
 
 using namespace std;
 
+void DisplayBoard(array<char*, 8> temp)
+{
+    cout <<"    1  2  3  4  5  6  7  8 "<<endl;
+    cout <<"  -------------------------"<<endl;
+    for(int i = 0; i<8;i++)
+    {
+        cout<<((char)('a'+i))<<"| ";
+        for(int j=0;j<8;j++)
+        {
+            cout<<" "<<temp[i][j]<<" ";
+        }
+        cout<<"|"<<endl;
+    }
+    cout <<"  -------------------------"<<endl;
+}
+
 int main()
 {
     cout<<"Initializing Console Chess..."<<endl;
@@ -29,29 +45,9 @@ int main()
     int whiteScore = 0;
     int blackScore = 0;
 
-    array<char*, 4> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "PPPPPPPP","RNBQKBNR"};
+    array<char*, 8> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "OOOOOOOO","OOOOOOOO","OOOOOOOO","OOOOOOOO","PPPPPPPP","RNBQKBNR"};
 
-    for(int i = 0; i<4;i++)
-    {
-        cout<<"| ";
-        for(int j=0;j<8;j++)
-        {
-            cout<<" "<<DEFAULT_POSITION[i][j]<<" ";
-        }
-        cout<<"|"<<endl;
-        if(i==1)
-        {
-            for(int k=0;k<4;k++)
-            {
-                cout<<"| ";
-                for(int l=0;l<8;l++)
-                {
-                    cout<<"[]"<<" ";
-                }
-                cout<<"|"<<endl;
-            }
-        }
-    }
+    DisplayBoard(DEFAULT_POSITION);
 
     while(!bExit)
     {
@@ -73,7 +69,7 @@ int main()
                 if(unitTemp.compare("pawn") == 0) toMove = PAWN;
                 else if(unitTemp.compare("bishop") == 0) toMove = BISHOP;
                 else if(unitTemp.compare("knight") == 0) toMove = KNIGHT;
-                else if(unitTemp.compare("rook") == 0 | unitTemp.compare("tower") == 0) toMove = ROOK;
+                else if((unitTemp.compare("rook") == 0) | (unitTemp.compare("tower") == 0)) toMove = ROOK;
                 else if(unitTemp.compare("king") == 0) toMove = KING;
                 else if(unitTemp.compare("queen") == 0) toMove = QUEEN;
                 else {
@@ -96,7 +92,13 @@ int main()
                     bValid = false;
                 }
                 else cout<<endl<<"Attempting to move "<<turn<<" "<<toMove<<" to "<< unitTemp<<endl;
+                if(turn == WHITE) whiteScore+=10;
+                else blackScore+=10;
             }
+
+            //switch the turn
+            if(turn == WHITE) turn = BLACK;
+            else turn = WHITE;
         }
         else if(temp.compare("endgame")==0) {
             cout<<endl<<"------ GAME OVER ------"<<endl;
@@ -120,10 +122,10 @@ int main()
                 }
             }
         }
-
-        //switch the turn
-        if(turn == WHITE) turn = BLACK;
-        else turn = WHITE;
+        else
+        {
+            cout<<endl<<"Invalid action entered!"<<endl;
+        }
     }
 
     return 1;
