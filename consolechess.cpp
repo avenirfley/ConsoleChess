@@ -6,6 +6,28 @@
 
 using namespace std;
 
+// THE CLASSIC GAMME LOOP
+/**********************************
+ state := playGame;
+initialize position
+print board
+while (state != gameover)
+   wait for input of a move by the user
+   make move (if legal)
+   if (mate or stalemate) {
+      state := gameOver;
+      break;
+   }
+   search move with allocated time
+   make move
+   print move and update board
+   if (mate or stalemate)
+      state := gameOver;
+}
+print "thank you for playing the game";
+*************************************/
+
+
 array<char*, 8> DEFAULT_POSITION = {"rnbqkbnr","pppppppp", "OOOOOOOO","OOOOOOOO","OOOOOOOO","OOOOOOOO","PPPPPPPP","RNBQKBNR"};
 
 void DisplayBoard(array<char*, 8> temp)
